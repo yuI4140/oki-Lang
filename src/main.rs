@@ -20,7 +20,7 @@ enum Operators {
 	Sub,
 	Mul,
 	Div,
-    Eq,
+	Eq,
 }
 
 #[derive(Debug)]
@@ -84,9 +84,21 @@ fn tokenize(input: &str) -> Vec<Token> {
 					}
 				}
 			}
-			'+' | '-' | '*' | '/'|'=' => {
+			'+' | '-' | '*' | '/' | '=' => {
 				chars.next();
 				tokens.push(Token::new(Type::Operator(get_operator(ch)), ch.to_string()).unwrap());
+			}
+			'"' => {
+				chars.next();
+				let mut value = String::new();
+				while let Some(&quoted_char) = chars.peek() {
+					chars.next();
+					if quoted_char == '"' {
+						break;
+					}
+					value.push(quoted_char);
+				}
+				tokens.push(Token::new(Type::Str, value).unwrap());
 			}
 			_ => {
 				chars.next();
@@ -101,14 +113,14 @@ fn get_operator(ch: char) -> Operators {
 		'-' => Operators::Sub,
 		'*' => Operators::Mul,
 		'/' => Operators::Div,
-        '=' => Operators::Eq,
+		'=' => Operators::Eq,
 		_ => panic!("Invalid operator!"),
 	}
 }
-fn main()->Result<()>  {
+fn main() -> Result<()> {
 	println!("is running!");
-	let input = "var=2+2";
+	let input = "var=\"Hello\"";
 	let tokens = tokenize(input);
-	println!("Tokens: {:?}\n", tokens[0]);
-    Ok(())
+	println!("Tokens: {:?}\n", tokens[2]._type);
+	Ok(())
 }
