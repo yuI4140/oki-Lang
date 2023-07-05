@@ -161,7 +161,7 @@ fn str_to_type<T: std::str::FromStr>(string: &str) -> Option<T> {
 		Err(_) => None,
 	}
 }
-fn get_cloned_value<T: Clone + Default>(option: Option<T>) -> T {
+pub fn get_cloned_value<T: Clone + Default>(option: Option<T>) -> T {
 	match option.as_ref() {
 		Some(value) => value.clone(),
 		None => T::default(),
